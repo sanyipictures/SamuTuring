@@ -1,6 +1,6 @@
 #ifndef SamuQl_H
 #define SamuQl_H
-
+#include <tuple>
 /**
  * @brief NAHSHON QL from https://github.com/nbatfai/nahshon
  *
@@ -1153,7 +1153,7 @@ public:
         return ss.str();
 
     }
-
+/*
     std::string printSortedRules() {
 
         std::vector<std::pair<std::pair<int, int>, int>> tmp;
@@ -1169,6 +1169,25 @@ public:
             return t1.second > t2.second;
         }
         );
+*/
+std::string printSortedRules() {
+
+        std::vector<std::tuple<int, int, int> > tmp;
+
+        for ( auto& rule : rules ) {
+            std::tuple<int, int, int> p;// {{rule.first.first, rule.first.second}, rule.second};
+	    std::get<0>(p)=rule.first.first;
+	    std::get<1>(p)=rule.first.second;
+	    std::get<2>(p)=rule.second;
+            tmp.push_back ( p );
+        }
+
+        std::sort (
+            std::begin ( tmp ), std::end ( tmp ),
+        [=] ( auto&& t1, auto&& t2 ) {
+            return std::get<2>(t1) > std::get<2>(t2);
+        }
+        );
 
         std::stringstream ss;
 
@@ -1176,7 +1195,8 @@ public:
 
         for ( auto& rule : tmp ) {
             //ss << ", " <<rule.first.first <<","  << rule.first.second << "(" << rule.second<< ") ";
-ss << ", " <<rule.first.first <<", "  << rule.first.second;
+ss << ", " <<std::get<0>(rule) <<", "  << std::get<1>(rule);
+
 	  
 	}
         return ss.str();
